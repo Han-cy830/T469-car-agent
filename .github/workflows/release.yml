@@ -66,7 +66,7 @@ jobs:
       - name: Deploy Qt runtime
         shell: cmd
         run: |
-          cd gui
+          cd gui\release
           windeployqt t469-car-agent.exe
 
       - name: Package
@@ -74,12 +74,12 @@ jobs:
         run: |
           $dir = "release\t469-car-agent-windows-x86_64"
           New-Item -ItemType Directory -Force -Path $dir
-          Copy-Item "gui\t469-car-agent.exe" $dir
-          Copy-Item "gui\*.dll" $dir -ErrorAction SilentlyContinue
-          Copy-Item "gui\platforms" $dir -Recurse -ErrorAction SilentlyContinue
-          Copy-Item "gui\styles" $dir -Recurse -ErrorAction SilentlyContinue
-          Copy-Item "gui\imageformats" $dir -Recurse -ErrorAction SilentlyContinue
-          Copy-Item "gui\translations" $dir -Recurse -ErrorAction SilentlyContinue
+          Copy-Item "gui\release\t469-car-agent.exe" $dir
+          Copy-Item "gui\release\*.dll" $dir -ErrorAction SilentlyContinue
+          Copy-Item "gui\release\platforms" $dir -Recurse -ErrorAction SilentlyContinue
+          Copy-Item "gui\release\styles" $dir -Recurse -ErrorAction SilentlyContinue
+          Copy-Item "gui\release\imageformats" $dir -Recurse -ErrorAction SilentlyContinue
+          Copy-Item "gui\release\translations" $dir -Recurse -ErrorAction SilentlyContinue
           Copy-Item "diagnose.sh","fix.sh","build.sh","pain-points.md","PROMPT.md","README.md" $dir
           Copy-Item "examples" $dir -Recurse
           Compress-Archive -Path "$dir\*" -DestinationPath "release\t469-car-agent-windows-x86_64.zip"

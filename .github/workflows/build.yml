@@ -58,12 +58,12 @@ jobs:
       - name: Verify
         shell: cmd
         run: |
-          dir gui\t469-car-agent.exe
+          dir gui\release\t469-car-agent.exe
 
       - name: Deploy Qt runtime
         shell: cmd
         run: |
-          cd gui
+          cd gui\release
           windeployqt t469-car-agent.exe
 
       - name: Upload artifact
@@ -71,9 +71,9 @@ jobs:
         with:
           name: t469-car-agent-windows-x86_64
           path: |
-            gui/t469-car-agent.exe
-            gui/*.dll
-            gui/platforms/
-            gui/styles/
-            gui/imageformats/
-            gui/translations/
+            gui/release/t469-car-agent.exe
+            gui/release/*.dll
+            gui/release/platforms/
+            gui/release/styles/
+            gui/release/imageformats/
+            gui/release/translations/
