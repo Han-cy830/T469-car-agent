@@ -111,7 +111,9 @@ QString AnsiHtml::toHtml(const QString &text)
 QString AnsiHtml::strip(const QString &text)
 {
     static QRegularExpression re("\x1b\\[[0-9;]*m");
-    return text.replace(re, QString());
+    QString result = text;
+    result.replace(re, QString());
+    return result;
 }
 
 QString AnsiHtml::toPlainText(const QString &text)
