@@ -1,0 +1,78 @@
+name: Build GUI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v4
+        with:
+          version: '5.15.2'
+          modules: 'qtwidgets'
+
+      - name: Build
+        run: |
+          cd gui
+          qmake gui.pro
+          make -j$(nproc)
+
+      - name: Verify
+        run: |
+          file gui/t469-car-agent
+          ldd gui/t469-car-agent
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: t469-car-agent-linux-x86_64
+          path: gui/t469-car-agent
+
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v4
+        with:
+          version: '5.15.2'
+          arch: 'win64_msvc2019_64'
+          modules: 'qtwidgets'
+
+      - name: Build
+        shell: cmd
+        run: |
+          cd gui
+          qmake gui.pro
+          nmake
+
+      - name: Verify
+        shell: cmd
+        run: |
+          dir gui\t469-car-agent.exe
+
+      - name: Deploy Qt runtime
+        shell: cmd
+        run: |
+          cd gui
+          windeployqt t469-car-agent.exe
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: t469-car-agent-windows-x86_64
+          path: |
+            gui/t469-car-agent.exe
+            gui/*.dll
+            gui/platforms/
+            gui/styles/
+            gui/imageformats/
+            gui/translations/

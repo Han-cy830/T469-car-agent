@@ -1,0 +1,88 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v4
+        with:
+          version: '5.15.2'
+          modules: 'qtwidgets'
+
+      - name: Build
+        run: |
+          cd gui
+          qmake gui.pro
+          make -j$(nproc)
+
+      - name: Package
+        run: |
+          mkdir -p release/t469-car-agent-linux-x86_64
+          cp gui/t469-car-agent release/t469-car-agent-linux-x86_64/
+          cp -r gui/examples release/t469-car-agent-linux-x86_64/ 2>/dev/null || true
+          cp diagnose.sh fix.sh build.sh pain-points.md PROMPT.md README.md release/t469-car-agent-linux-x86_64/
+          cp -r examples release/t469-car-agent-linux-x86_64/
+          cd release
+          tar -czf t469-car-agent-linux-x86_64.tar.gz t469-car-agent-linux-x86_64/
+
+      - name: Upload Release Asset
+        uses: softprops/action-gh-release@v2
+        with:
+          files: release/t469-car-agent-linux-x86_64.tar.gz
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v4
+        with:
+          version: '5.15.2'
+          arch: 'win64_msvc2019_64'
+          modules: 'qtwidgets'
+
+      - name: Build
+        shell: cmd
+        run: |
+          cd gui
+          qmake gui.pro
+          nmake
+
+      - name: Deploy Qt runtime
+        shell: cmd
+        run: |
+          cd gui
+          windeployqt t469-car-agent.exe
+
+      - name: Package
+        shell: pwsh
+        run: |
+          $dir = "release\t469-car-agent-windows-x86_64"
+          New-Item -ItemType Directory -Force -Path $dir
+          Copy-Item "gui\t469-car-agent.exe" $dir
+          Copy-Item "gui\*.dll" $dir -ErrorAction SilentlyContinue
+          Copy-Item "gui\platforms" $dir -Recurse -ErrorAction SilentlyContinue
+          Copy-Item "gui\styles" $dir -Recurse -ErrorAction SilentlyContinue
+          Copy-Item "gui\imageformats" $dir -Recurse -ErrorAction SilentlyContinue
+          Copy-Item "gui\translations" $dir -Recurse -ErrorAction SilentlyContinue
+          Copy-Item "diagnose.sh","fix.sh","build.sh","pain-points.md","PROMPT.md","README.md" $dir
+          Copy-Item "examples" $dir -Recurse
+          Compress-Archive -Path "$dir\*" -DestinationPath "release\t469-car-agent-windows-x86_64.zip"
+
+      - name: Upload Release Asset
+        uses: softprops/action-gh-release@v2
+        with:
+          files: release/t469-car-agent-windows-x86_64.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

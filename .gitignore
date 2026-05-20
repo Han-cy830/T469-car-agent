@@ -1,0 +1,47 @@
+# Build artifacts
+*.o
+*.a
+*.so
+*.so.*
+*.d
+*.moc
+moc_*
+qrc_*
+ui_*
+
+# Qt build files
+Makefile
+.qmake.stash
+*.pro.user
+
+# GUI build output
+gui/t469-car-agent
+gui/t469-car-agent.exe
+gui/*.dll
+gui/platforms/
+gui/styles/
+gui/imageformats/
+gui/translations/
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Large binary files (use Git LFS instead)
+build-qt-*/
+compiled/MPlayer-1.4/build/
+compiled/alsa-lib-1.2.2/build/
+deploy/
+release/
+
+# Keep source and documentation
+!*.md
+!*.sh
+!.gitignore
+!.github/
