@@ -35,11 +35,11 @@ void BuildTab::setupUi()
     auto *controlLayout = new QHBoxLayout();
 
     m_targetCombo = new QComboBox();
-    m_targetCombo->addItem("全部 (all)");
-    m_targetCombo->addItem("Qt (qt)");
-    m_targetCombo->addItem("ALSA (alsa)");
-    m_targetCombo->addItem("车载应用 (car)");
-    m_targetCombo->addItem("部署包 (deploy)");
+    m_targetCombo->addItem("全部 (all)", "all");
+    m_targetCombo->addItem("Qt (qt)", "qt");
+    m_targetCombo->addItem("ALSA (alsa)", "alsa");
+    m_targetCombo->addItem("车载应用 (car)", "car");
+    m_targetCombo->addItem("部署包 (deploy)", "deploy");
     m_targetCombo->setMinimumWidth(160);
     controlLayout->addWidget(m_targetCombo);
 

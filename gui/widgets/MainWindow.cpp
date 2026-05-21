@@ -97,6 +97,7 @@ void MainWindow::setupUi()
 
     // 连接导航信号
     connect(m_sidebar, &SidebarWidget::pageChanged, this, &MainWindow::switchPage);
+    connect(m_dashboardTab, &DashboardTab::navigateToPage, this, &MainWindow::switchPage);
 
     // 连接各页面的日志输出到日志面板
     connect(m_diagnosisTab, &DiagnosisTab::logOutput, m_logPanel, &LogPanel::appendLog);

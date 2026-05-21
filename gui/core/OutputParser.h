@@ -11,6 +11,7 @@ struct ParsedLine {
     QString content;
     QString category;
     QString detail;
+    QString suggestion;
 };
 
 class OutputParser

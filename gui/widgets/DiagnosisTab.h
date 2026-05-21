@@ -8,7 +8,6 @@
 #include <QProgressBar>
 
 class ShellRunner;
-class OutputParser;
 
 class DiagnosisTab : public QWidget
 {
@@ -42,5 +41,4 @@ private:
     int m_failCount;
     int m_warnCount;
 };
-
-#endif // DIAGNOSISTAB_H
+#endif

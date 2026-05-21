@@ -6,12 +6,17 @@
 #include <QPushButton>
 #include <QGridLayout>
 
+class ShellRunner;
+
 class DashboardTab : public QWidget
 {
     Q_OBJECT
 
 public:
     explicit DashboardTab(QWidget *parent = nullptr);
+
+signals:
+    void navigateToPage(int index);
 
 private:
     void setupUi();
@@ -21,6 +26,8 @@ private:
     QLabel *m_qtLabel;
     QLabel *m_alsaLabel;
     QLabel *m_deployLabel;
+    ShellRunner *m_runner;
+    int m_checkIndex;
+    void runNextCheck();
 };
-
-#endif // DASHBOARDTAB_H
+#endif

@@ -4,7 +4,7 @@
 #include <QObject>
 #include <QString>
 
-class ShellRunner;
+class QProcess;
 
 class SshConnector : public QObject
 {
@@ -12,19 +12,12 @@ class SshConnector : public QObject
 
 public:
     explicit SshConnector(QObject *parent = nullptr);
+    ~SshConnector();
 
     void setConnectionInfo(const QString &host, int port, const QString &user, const QString &password);
-
-    // 执行远程命令
     void executeCommand(const QString &command);
-
-    // 上传目录
     void uploadDirectory(const QString &localDir, const QString &remoteDir);
-
-    // 上传单个文件
     void uploadFile(const QString &localFile, const QString &remoteFile);
-
-    // 停止当前操作
     void kill();
 
 signals:
@@ -32,16 +25,21 @@ signals:
     void errorReady(const QString &text);
     void finished(int exitCode);
 
+private slots:
+    void onReadyReadStdout();
+    void onReadyReadStderr();
+    void onProcessFinished(int exitCode);
+
 private:
-    ShellRunner *m_runner;
+    QProcess *m_process;
     QString m_host;
     int m_port;
     QString m_user;
     QString m_password;
 
-    QString buildSshCommand(const QString &command) const;
-    QString buildScpCommand(const QString &local, const QString &remote) const;
-    QString askpassScript() const;
+    void startSshOrScp(const QString &program, const QStringList &extraArgs);
+    QString askpassPath() const;
+    void writeAskpass();
+    void cleanupAskpass();
 };
-
-#endif // SSHCONNECTOR_H
+#endif
